@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Session</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Archivo:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#111413;
+    --panel:#1a1e1c;
+    --panel-2:#232826;
+    --line:#313834;
+    --ink:#f2f4f0;
+    --muted:#8a938c;
+    --primary:#e8fe5a;      /* electric lime — the "go" accent */
+    --secondary:#ff7a4d;    /* warm orange — secondary lifts */
+    --done:#5be3a0;
+    --shadow:0 2px 0 rgba(0,0,0,.4);
+    font-size:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Archivo',system-ui,sans-serif;
+    min-height:100vh;
+    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:0 18px 120px;}
+
+  /* ---------- Header ---------- */
+  header{padding:26px 0 18px;position:sticky;top:0;background:linear-gradient(var(--bg) 78%,transparent);z-index:20;}
+  .eyebrow{font-family:'Barlow Condensed';font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-size:.82rem;}
+  .daytitle{font-family:'Barlow Condensed';font-weight:800;font-size:3.1rem;line-height:.9;letter-spacing:-.01em;text-transform:uppercase;margin-top:4px;}
+  .daytitle .accent{color:var(--primary);}
+  .switcher{display:flex;gap:6px;margin-top:16px;flex-wrap:wrap;}
+  .chip{
+    font-family:'Barlow Condensed';font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+    font-size:.9rem;padding:7px 12px;border:1px solid var(--line);border-radius:999px;
+    background:transparent;color:var(--muted);cursor:pointer;transition:.15s;
+  }
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+  .chip:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
+
+  /* ---------- Progress bar ---------- */
+  .progwrap{margin-top:16px;display:flex;align-items:center;gap:12px;}
+  .progtrack{flex:1;height:8px;background:var(--panel-2);border-radius:999px;overflow:hidden;}
+  .progfill{height:100%;width:0;background:var(--done);border-radius:999px;transition:width .35s cubic-bezier(.2,.8,.2,1);}
+  .progpct{font-family:'Barlow Condensed';font-weight:700;font-size:1.05rem;min-width:44px;text-align:right;}
+
+  /* ---------- Exercise card ---------- */
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    padding:16px 16px 18px;margin-top:14px;box-shadow:var(--shadow);
+    transition:border-color .2s,opacity .2s;
+  }
+  .card.complete{border-color:var(--done);}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .grp{display:flex;align-items:center;gap:9px;}
+  .tag{
+    font-family:'Barlow Condensed';font-weight:700;font-size:.72rem;letter-spacing:.12em;
+    text-transform:uppercase;padding:3px 8px;border-radius:6px;
+  }
+  .tag.p{background:var(--primary);color:#182100;}
+  .tag.s{background:var(--secondary);color:#2a0f00;}
+  .grpname{font-family:'Barlow Condensed';font-weight:700;font-size:1.35rem;text-transform:uppercase;letter-spacing:.01em;}
+  .scheme{font-family:'Barlow Condensed';font-weight:700;font-size:1.25rem;color:var(--muted);white-space:nowrap;}
+  .scheme b{color:var(--ink);}
+
+  .exline{margin-top:12px;}
+  .exname{font-size:1.06rem;font-weight:600;}
+  .exnote{font-size:.86rem;color:var(--muted);margin-top:3px;line-height:1.35;}
+  select{
+    width:100%;margin-top:4px;background:var(--panel-2);color:var(--ink);
+    border:1px solid var(--line);border-radius:10px;padding:11px 12px;
+    font-family:'Archivo';font-size:1.02rem;font-weight:600;cursor:pointer;
+    appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%238a938c' stroke-width='2'%3E%3Cpath d='M2 5l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;
+  }
+  select:focus-visible{outline:2px solid var(--primary);outline-offset:1px;}
+
+  /* ---------- Set dots ---------- */
+  .sets{display:flex;gap:10px;margin-top:15px;align-items:center;}
+  .sets-label{font-family:'Barlow Condensed';font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.78rem;color:var(--muted);margin-right:2px;}
+  .dot{
+    flex:1;height:48px;border-radius:11px;border:1.5px solid var(--line);
+    background:var(--panel-2);color:var(--muted);cursor:pointer;
+    font-family:'Barlow Condensed';font-weight:700;font-size:1.5rem;
+    display:flex;align-items:center;justify-content:center;transition:.14s;
+  }
+  .dot:active{transform:scale(.94);}
+  .dot.on{background:var(--done);border-color:var(--done);color:#052b1a;box-shadow:0 0 0 3px rgba(91,227,160,.15);}
+  .dot:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
+
+  /* ---------- Footer / done ---------- */
+  .done-banner{
+    position:fixed;left:0;right:0;bottom:0;padding:16px 18px calc(16px + env(safe-area-inset-bottom));
+    background:linear-gradient(transparent,var(--bg) 40%);text-align:center;
+    transform:translateY(120%);transition:transform .4s cubic-bezier(.2,.8,.2,1);pointer-events:none;
+  }
+  .done-banner.show{transform:translateY(0);}
+  .done-inner{background:var(--done);color:#052b1a;font-family:'Barlow Condensed';font-weight:800;
+    text-transform:uppercase;letter-spacing:.06em;font-size:1.3rem;padding:16px;border-radius:14px;
+    max-width:484px;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,.5);}
+  .reset{display:block;margin:22px auto 0;background:none;border:none;color:var(--muted);
+    font-family:'Barlow Condensed';font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    font-size:.85rem;cursor:pointer;padding:8px;}
+  .reset:hover{color:var(--ink);}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow" id="eyebrow">Two-week cycle</div>
+    <h1 class="daytitle" id="daytitle">Today's <span class="accent">Session</span></h1>
+
+    <div class="switcher" role="group" aria-label="Choose week">
+      <button class="chip" data-week="A" aria-pressed="true">Week A</button>
+      <button class="chip" data-week="B" aria-pressed="false">Week B</button>
+      <span style="width:8px"></span>
+      <button class="chip" data-day="Tue" aria-pressed="true">Tue</button>
+      <button class="chip" data-day="Thu" aria-pressed="false">Thu</button>
+      <button class="chip" data-day="Sun" aria-pressed="false">Sun</button>
+    </div>
+
+    <div class="progwrap">
+      <div class="progtrack"><div class="progfill" id="progfill"></div></div>
+      <div class="progpct" id="progpct">0%</div>
+    </div>
+  </header>
+
+  <main id="list"></main>
+
+  <button class="reset" id="reset">Reset all sets</button>
+</div>
+
+<div class="done-banner" id="donebanner"><div class="done-inner">Session complete — nice work</div></div>
+
+<script>
+/* ---------------- Data model ---------------- */
+const GROUPS = {
+  push:  { name:"Upper Push",  primary:"Bench Press",
+    secondary:[
+      {label:"Dips", note:"Lean forward for more chest · stay upright for more triceps"},
+      {label:"Pushup"},
+      {label:"Incline Bench"}
+    ]},
+  pull:  { name:"Upper Pull",  primary:"Pullup",
+    secondary:[ {label:"Row"} ]},
+  press: { name:"Overhead Press", primary:"Overhead Press",
+    secondary:[
+      {label:"Kettlebell Press"},
+      {label:"Seated Dumbbell Press", note:"Variant: squat and press"},
+      {label:"Handstand Press"}
+    ]},
+  squat: { name:"Squat", primary:"Back Squat",
+    secondary:[
+      {label:"Goblet Squat"},
+      {label:"Zercher Squat"},
+      {label:"Front Squat"},
+      {label:"Bulgarian Split Squat"}
+    ]},
+  hinge: { name:"Hinge", primary:"Deadlift",
+    secondary:[ {label:"Romanian Deadlift"} ]},
+  core:  { name:"Core", primary:"Hanging Leg Raise",
+    secondary:[ {label:"Hanging Leg Raise"} ]}  // only movement listed; used for both roles
+};
+
+/* Which groups are PRIMARY on each week/day. Everything else that day is SECONDARY.
+   Pull auto-assigned: primary on the Press/Hinge/Core-heavy day, secondary otherwise. */
+const SCHEDULE = {
+  A:{
+    Tue:["push","squat","pull"],
+    Thu:["press","hinge","core"],
+    Sun:["push","squat","pull"]
+  },
+  B:{
+    Tue:["press","squat","pull"],
+    Thu:["push","hinge","core"],
+    Sun:["press","squat","pull"]
+  }
+};
+
+const ORDER = ["push","pull","press","squat","hinge","core"];
+const SCHEME = { P:{sets:3,reps:5}, S:{sets:3,reps:10} };
+
+/* ---------------- State ---------------- */
+let state = { week:"A", day:"Tue", picks:{}, sets:{} };
+
+function autoPickDay(){
+  const now = new Date().getDay(); // 0 Sun .. 6 Sat
+  if(now===0) return "Sun";
+  if(now>=4) return "Thu";        // Thu/Fri/Sat lean Thu
+  return "Tue";
+}
+state.day = autoPickDay();
+
+/* ---------------- Render ---------------- */
+const list = document.getElementById('list');
+
+function roleOf(groupKey){
+  return SCHEDULE[state.week][state.day].includes(groupKey) ? "P" : "S";
+}
+
+function render(){
+  document.getElementById('eyebrow').textContent = `Week ${state.week} · ${fullDay(state.day)}`;
+  const primaries = SCHEDULE[state.week][state.day].map(k=>GROUPS[k].name.split(' ')[0]);
+  document.getElementById('daytitle').innerHTML =
+    `${primaries.slice(0,-1).join(', ')} & <span class="accent">${primaries.slice(-1)}</span>`;
+
+  syncChips();
+  list.innerHTML = '';
+  ORDER.forEach(key=>list.appendChild(card(key)));
+  updateProgress();
+}
+
+function card(key){
+  const g = GROUPS[key];
+  const role = roleOf(key);
+  const scheme = SCHEME[role];
+  const setKey = `${state.week}|${state.day}|${key}`;
+  if(!(setKey in state.sets)) state.sets[setKey] = 0;
+
+  const el = document.createElement('section');
+  el.className = 'card';
+
+  // ---- top row
+  const top = document.createElement('div'); top.className='card-top';
+  top.innerHTML = `<div class="grp">
+      <span class="tag ${role.toLowerCase()}">${role==='P'?'Primary':'Secondary'}</span>
+      <span class="grpname">${g.name}</span>
+    </div>
+    <div class="scheme"><b>${scheme.sets}</b>×<b>${scheme.reps}</b></div>`;
+  el.appendChild(top);
+
+  // ---- exercise line
+  const exline = document.createElement('div'); exline.className='exline';
+  if(role==='P'){
+    exline.innerHTML = `<div class="exname">${g.primary}</div>`;
+  } else {
+    // secondary: dropdown of options
+    const chosen = state.picks[setKey] ?? 0;
+    const opts = g.secondary.map((s,i)=>`<option value="${i}" ${i==chosen?'selected':''}>${s.label}</option>`).join('');
+    const sel = document.createElement('select');
+    sel.innerHTML = opts;
+    sel.setAttribute('aria-label',`Choose ${g.name} secondary exercise`);
+    sel.onchange = e=>{ state.picks[setKey]=+e.target.value; renderNote(); };
+    exline.appendChild(sel);
+    const note = document.createElement('div'); note.className='exnote'; note.id='note-'+setKey;
+    exline.appendChild(note);
+    function renderNote(){
+      const n = g.secondary[state.picks[setKey]??0].note;
+      const nd = document.getElementById('note-'+setKey);
+      nd.textContent = n || '';
+      nd.style.display = n ? 'block':'none';
+    }
+    setTimeout(renderNote,0);
+  }
+  el.appendChild(exline);
+
+  // ---- set dots
+  const sets = document.createElement('div'); sets.className='sets';
+  const lab = document.createElement('span'); lab.className='sets-label'; lab.textContent='Sets';
+  sets.appendChild(lab);
+  const done = state.sets[setKey];
+  for(let i=1;i<=scheme.sets;i++){
+    const d = document.createElement('button');
+    d.className='dot'+(i<=done?' on':'');
+    d.textContent=i;
+    d.setAttribute('aria-label',`Set ${i} of ${scheme.sets}`);
+    d.setAttribute('aria-pressed', i<=done);
+    d.onclick=()=>{
+      // tapping a dot sets completed count to that dot; tapping the last done dot clears it
+      state.sets[setKey] = (state.sets[setKey]===i) ? i-1 : i;
+      render();
+    };
+    sets.appendChild(d);
+  }
+  el.appendChild(sets);
+
+  if(done>=scheme.sets) el.classList.add('complete');
+  return el;
+}
+
+/* ---------------- Progress ---------------- */
+function updateProgress(){
+  let total=0, done=0;
+  ORDER.forEach(key=>{
+    const role=roleOf(key);
+    const need=SCHEME[role].sets;
+    const setKey=`${state.week}|${state.day}|${key}`;
+    total+=need;
+    done+=Math.min(state.sets[setKey]||0,need);
+  });
+  const pct = total? Math.round(done/total*100):0;
+  document.getElementById('progfill').style.width=pct+'%';
+  document.getElementById('progpct').textContent=pct+'%';
+  document.getElementById('donebanner').classList.toggle('show',pct===100);
+}
+
+/* ---------------- Chips ---------------- */
+function syncChips(){
+  document.querySelectorAll('[data-week]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.week===state.week));
+  document.querySelectorAll('[data-day]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.day===state.day));
+}
+document.querySelectorAll('[data-week]').forEach(b=>b.onclick=()=>{state.week=b.dataset.week;render();});
+document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{state.day=b.dataset.day;render();});
+document.getElementById('reset').onclick=()=>{
+  Object.keys(state.sets).forEach(k=>{ if(k.startsWith(`${state.week}|${state.day}|`)) state.sets[k]=0; });
+  render();
+};
+
+function fullDay(d){return {Tue:"Tuesday",Thu:"Thursday",Sun:"Sunday"}[d];}
+
+render();
+</script>
+</body>
+</html>

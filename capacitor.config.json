@@ -1,0 +1,20 @@
+{
+  "appId": "com.hugh.session",
+  "appName": "Session",
+  "webDir": "www",
+  "backgroundColor": "#111413",
+  "ios": {
+    "backgroundColor": "#111413",
+    "contentInset": "never"
+  },
+  "plugins": {
+    "Keyboard": {
+      "resize": "none"
+    },
+    "SplashScreen": {
+      "backgroundColor": "#111413",
+      "showSpinner": false,
+      "launchAutoHide": true
+    }
+  }
+}
