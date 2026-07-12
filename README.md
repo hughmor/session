@@ -26,3 +26,10 @@ The copied web assets are gitignored, so run this **before** building:
 npm install
 npx cap sync ios
 ```
+
+## Features to implement
+- Tracking week A/B
+- More exercises in some secondary categories
+- Tap on a category to expand into a full page view, which shows warm-up progression
+- Workout reminder push notifications
+- Built-in timers
