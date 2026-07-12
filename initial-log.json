@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": "2026-07-12T02:14:24+01:00",
+  "settings": {
+    "schemaVersion": 1,
+    "unit": "kg",
+    "incrementKg": 5,
+    "bodyweightKg": 83,
+    "goals": {
+      "push": 1.25,
+      "press": 0.8,
+      "squat": 1.5,
+      "hinge": 2
+    },
+    "pullupGoalReps": 10
+  },
+  "sessions": [
+    {
+      "id": "1783818860124-700787",
+      "datetime": "2026-07-09T10:14:20+01:00",
+      "week": "A",
+      "day": "Thu",
+      "unit": "kg",
+      "bodyweightKg": 83,
+      "exercises": [
+        {
+          "group": "push",
+          "role": "S",
+          "exercise": "Dips",
+          "mode": "weight",
+          "weightKg": 0,
+          "reps": null,
+          "setsCompleted": 3,
+          "setsPrescribed": 3,
+          "repsPrescribed": 10,
+          "amrap": null
+        },
+        {
+          "group": "pull",
+          "role": "S",
+          "exercise": "Row",
+          "mode": "weight",
+          "weightKg": 40,
+          "reps": null,
+          "setsCompleted": 3,
+          "setsPrescribed": 3,
+          "repsPrescribed": 10,
+          "amrap": null
+        },
+        {
+          "group": "press",
+          "role": "P",
+          "exercise": "Overhead Press",
+          "mode": "weight",
+          "weightKg": 30,
+          "reps": null,
+          "setsCompleted": 3,
+          "setsPrescribed": 3,
+          "repsPrescribed": 5,
+          "amrap": 6
+        },
+        {
+          "group": "squat",
+          "role": "S",
+          "exercise": "Goblet Squat",
+          "mode": "weight",
+          "weightKg": 16,
+          "reps": null,
+          "setsCompleted": 3,
+          "setsPrescribed": 3,
+          "repsPrescribed": 10,
+          "amrap": null
+        },
+        {
+          "group": "hinge",
+          "role": "P",
+          "exercise": "Deadlift",
+          "mode": "weight",
+          "weightKg": 60,
+          "reps": null,
+          "setsCompleted": 1,
+          "setsPrescribed": 1,
+          "repsPrescribed": 5,
+          "amrap": 8
+        },
+        {
+          "group": "core",
+          "role": "P",
+          "exercise": "Hanging Leg Raise",
+          "mode": "reps",
+          "weightKg": null,
+          "reps": 5,
+          "setsCompleted": 3,
+          "setsPrescribed": 3,
+          "repsPrescribed": 5,
+          "amrap": 5
+        }
+      ]
+    }
+  ]
+}
