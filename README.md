@@ -30,6 +30,11 @@ npx cap sync ios
 ## Features to implement
 - Tracking week A/B
 - More exercises in some secondary categories
-- Tap on a category to expand into a full page view, which shows warm-up progression
+- Tap on a category to expand into a full page view with warm-up
 - Workout reminder push notifications
+- Customizable workout schedule and split
+- Customizable sets*reps targets (program level)
 - Built-in timers
+- Need better progression metric for rep-based bodyweight movements that will turn into weight-added (weight*rep FoM?)
+- Spreadsheet export
+- Connection to self-hosted database for log backup + visualization + analytics
